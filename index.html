@@ -226,10 +226,7 @@
 </head>
 <body>
 
-    <!-- Setup Warning -->
-    <div class="text-center py-2 bg-gray-800 text-white sticky top-0 z-[100] text-xs">
-        ⚠️ <strong>表示手順：</strong> 画像ファイル名を <strong>sages.jpg</strong> および <strong>human_ai_synergy.jpg</strong> に変更し、このHTMLと同じフォルダに置いてください。
-    </div>
+
 
     <!-- Header -->
     <header class="fixed w-full z-50 bg-[#050505]/90 backdrop-blur-md border-b border-gray-800 top-8">
@@ -243,7 +240,7 @@
                 <a href="#method" class="hover:text-[#C5A059] transition">Method</a>
                 <a href="#price" class="hover:text-[#C5A059] transition">Plans</a>
             </nav>
-            <a href="#contact" class="px-6 py-2 border border-[#C5A059] text-[#C5A059] text-xs font-bold tracking-wider hover:bg-[#C5A059] hover:text-black transition duration-300 uppercase rounded-sm">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSct_GBeqg5iuymcnFupX0nfZmFi0pqPpgJZDsfIhYup21nlmg/viewform" target="_blank" class="px-6 py-2 border border-[#C5A059] text-[#C5A059] text-xs font-bold tracking-wider hover:bg-[#C5A059] hover:text-black transition duration-300 uppercase rounded-sm">
                 モニター選抜に応募
             </a>
         </div>
@@ -272,7 +269,7 @@
             </p>
             
             <div class="flex flex-col md:flex-row gap-6 justify-center items-center">
-                <a href="#contact" class="bg-gold text-black px-10 py-4 font-bold text-lg tracking-wide hover:opacity-90 transition transform hover:scale-105 shadow-[0_0_20px_rgba(197,160,89,0.4)] rounded-sm">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSct_GBeqg5iuymcnFupX0nfZmFi0pqPpgJZDsfIhYup21nlmg/viewform" target="_blank" class="bg-gold text-black px-10 py-4 font-bold text-lg tracking-wide hover:opacity-90 transition transform hover:scale-105 shadow-[0_0_20px_rgba(197,160,89,0.4)] rounded-sm">
                     無料カウンセリングに申し込む
                 </a>
             </div>
@@ -558,23 +555,25 @@
         </div>
     </section>
 
-    <!-- Footer / CTA -->
-    <section id="contact" class="py-24 gold-bg text-black text-center relative overflow-hidden">
+    <!-- Footer / CTA --><section id="contact" class="py-24 gold-bg text-black text-center relative overflow-hidden">
         <div class="container mx-auto px-6 relative z-10">
-            <h2 class="serif text-3xl md:text-5xl font-black mb-8">第1期生、まもなく締め切り。</h2>
+            <!-- 修正点②: テキスト色を #C5A059 に設定 -->
+            <h2 class="serif text-3xl md:text-5xl font-black mb-8 text-[#C5A059]">第1期生、まもなく締め切り。</h2>
             <div class="bg-white/90 backdrop-blur max-w-2xl mx-auto p-8 rounded-lg shadow-2xl mb-10 border border-white/50">
-                <p class="font-bold text-lg mb-4">【モニター特別オファー】</p>
+                <p class="font-bold text-lg mb-4 text-black">【モニター特別オファー】</p>
                 <div class="flex justify-center items-baseline gap-4 mb-4">
-                    <span class="text-gray-500 line-through font-bold">入会金 ¥165,000</span>
+                    <span class="text-gray-600 line-through font-bold">入会金 ¥165,000</span>
                     <span class="text-5xl font-black text-red-600">➡ ¥0</span>
                 </div>
                 <p class="text-sm text-gray-800 font-medium">※「AI適性診断」に合格された<span class="text-red-600 font-bold text-lg mx-1">先着5名様</span>限定です。</p>
             </div>
             
-            <a href="#" class="inline-block bg-black text-[#C5A059] px-12 py-5 font-bold text-xl tracking-wider hover:bg-gray-900 transition shadow-[0_10px_30px_rgba(0,0,0,0.3)] rounded transform hover:-translate-y-1">
+            <!-- 修正点①: フッターのリンク -->
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSct_GBeqg5iuymcnFupX0nfZmFi0pqPpgJZDsfIhYup21nlmg/viewform" target="_blank" class="inline-block bg-black text-[#C5A059] px-12 py-5 font-bold text-xl tracking-wider hover:bg-[#C5A059] hover:text-black transition duration-300 uppercase rounded-sm">
                 無料体験・モニターに応募する
             </a>
-            <p class="mt-6 text-sm font-bold opacity-80">まずは親子で「AIの凄さ」を体感しに来てください。</p>
+            <!-- 修正点②: テキスト色を #C5A059 に設定 -->
+            <p class="mt-6 text-sm font-bold opacity-80 footer-cta-text text-[#C5A059]">まずは親子で「AIの凄さ」を体感しに来てください。</p>
         </div>
     </section>
 
