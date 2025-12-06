@@ -204,14 +204,18 @@
         .floating { animation: float 6s ease-in-out infinite; }
         
         /* CTA Footer Styling */
-        /* ★ 修正点②の背景色を黒に指定し直す ★ */
-        .cta-footer-bg {
+        /* 修正点②: 背景色を黒に設定 */
+        .gold-bg {
             background-color: #000;
         }
         /* 修正点②: CTAフッターのテキスト色を、指定の#C5A059に変更 */
         .footer-cta-text {
             color: #C5A059; 
             font-weight: 900;
+        }
+        /* 修正点②: CTAヘッダーのテキスト色を、指定の#C5A059に変更 */
+        .cta-header-text {
+             color: #C5A059;
         }
     </style>
 </head>
@@ -412,7 +416,7 @@
                 </div>
             </div>
             
-            <!-- School Descriptions --><div class="grid md:grid-cols-3 gap-6 text-center text-xs text-gray-500 mt-8 max-w-5xl mx-auto">
+            <!-- School Descriptions --><div class="grid grid-cols-3 gap-6 text-center text-xs text-gray-500 mt-8 max-w-5xl mx-auto">
                 <div>
                     <h4 class="text-blue-400 font-bold mb-2">LOGIC SCHOOL</h4>
                     <p>論理と基礎を極める。<br>記述力・本質的理解。</p>
