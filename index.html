@@ -39,7 +39,7 @@
             top: 0; left: 0; right: 0; bottom: 0;
             background-image: 
                 linear-gradient(rgba(197, 160, 89, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(197, 160, 89, 0.05) 1px, transparent transparent);
+                linear-gradient(90deg, rgba(197, 160, 89, 0.05) 1px, transparent 1px);
             background-size: 50px 50px;
             opacity: 0.3;
         }
@@ -83,13 +83,12 @@
         /* ★ Sprite Image Settings (ローカル画像参照) ★ */
         .sprite-img {
             position: absolute;
-            /* 枠のサイズに合わせて 9人分 (3x3) に調整 */
-            width: 300%;  
-            height: 300%; 
+            top: 0; left: 0;
+            width: 300%;  /* 3x3グリッドなので3倍 */
+            height: 300%; /* 3x3グリッドなので3倍 */
             
             background-image: url('sages.jpg'); 
-            
-            background-size: 100% 100%; /* 画像全体が300% x 300%のコンテナにフィット */
+            background-size: 100% 100%;
             background-repeat: no-repeat;
             
             filter: sepia(0.3) contrast(1.1) brightness(0.9);
@@ -97,6 +96,10 @@
         }
 
         /* --- 切り出し位置 (3x3 Grid - FINAL CORRECT CALCULATION) --- */
+        /* 計算: background-position: X% Y%;
+           X軸は0%, 50%, 100% / Y軸は0%, 50%, 100% 
+           このロジックは画像が3x3にきれいに分割されている前提で正しく機能します。
+        */
         .pos-socrates   { background-position: 0% 0%; }
         .pos-plato      { background-position: 50% 0%; }
         .pos-descartes  { background-position: 100% 0%; }
@@ -203,19 +206,26 @@
             50% { transform: translateY(-10px); }
         }
         .floating { animation: float 6s ease-in-out infinite; }
-        
-        /* 修正：フッターCTAのテキスト色を白に変更し、視認性を確保 */
+
+        /* CTA Footer Styling */
+        .gold-bg {
+            background: linear-gradient(135deg, #C5A059, #F2D088); /* ゴールドのグラデーション */
+        }
         .footer-cta-text {
-            color: #ffffff; /* 白に変更 */
-            font-weight: 900;
+            /* 背景が明るいゴールドなので、テキストは黒系に設定 */
+            color: #333; 
         }
     </style>
 </head>
 <body>
 
-    <!-- 削除箇所： Setup Warning -->
-    
-    <!-- Header --><header class="fixed w-full z-50 bg-[#050505]/90 backdrop-blur-md border-b border-gray-800 top-8">
+    <!-- Setup Warning -->
+    <div class="text-center py-2 bg-gray-800 text-white sticky top-0 z-[100] text-xs">
+        ⚠️ <strong>表示手順：</strong> お手持ちの画像を <strong>sages.jpg</strong> および <strong>human_ai_synergy.jpg</strong> にリネームし、このHTMLと同じフォルダに置いてください。
+    </div>
+
+    <!-- Header -->
+    <header class="fixed w-full z-50 bg-[#050505]/90 backdrop-blur-md border-b border-gray-800 top-8">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
             <div class="text-xl font-black serif tracking-widest text-white">
                 AI ELITE <span class="text-[#C5A059]">ACADEMY</span>
@@ -226,13 +236,15 @@
                 <a href="#method" class="hover:text-[#C5A059] transition">Method</a>
                 <a href="#price" class="hover:text-[#C5A059] transition">Plans</a>
             </nav>
+            <!-- 修正点①: ヘッダーのリンク -->
             <a href="https://docs.google.com/forms/d/e/1FAIpQLSct_GBeqg5iuymcnFupX0nfZmFi0pqPpgJZDsfIhYup21nlmg/viewform" target="_blank" class="px-6 py-2 border border-[#C5A059] text-[#C5A059] text-xs font-bold tracking-wider hover:bg-[#C5A059] hover:text-black transition duration-300 uppercase rounded-sm">
                 モニター選抜に応募
             </a>
         </div>
     </header>
 
-    <!-- FV (First View) --><section class="hero-bg min-h-screen flex items-center justify-center pt-20 relative">
+    <!-- FV (First View) -->
+    <section class="hero-bg min-h-screen flex items-center justify-center pt-20 relative">
         <div class="container mx-auto px-6 text-center relative z-10">
             <p class="text-[#C5A059] tracking-[0.4em] text-xs md:text-sm font-bold mb-8 animate-pulse uppercase">For Medical & Elite University Candidates</p>
             
@@ -254,6 +266,7 @@
             </p>
             
             <div class="flex flex-col md:flex-row gap-6 justify-center items-center">
+                <!-- 修正点①: FVのリンク -->
                 <a href="https://docs.google.com/forms/d/e/1FAIpQLSct_GBeqg5iuymcnFupX0nfZmFi0pqPpgJZDsfIhYup21nlmg/viewform" target="_blank" class="bg-gold text-black px-10 py-4 font-bold text-lg tracking-wide hover:opacity-90 transition transform hover:scale-105 shadow-[0_0_20px_rgba(197,160,89,0.4)] rounded-sm">
                     無料カウンセリングに申し込む
                 </a>
@@ -526,23 +539,25 @@
         </div>
     </section>
 
-    <!-- Footer / CTA -->
-    <section id="contact" class="py-24 gold-bg text-black text-center relative overflow-hidden">
+    <!-- Footer / CTA --><section id="contact" class="py-24 gold-bg text-black text-center relative overflow-hidden">
         <div class="container mx-auto px-6 relative z-10">
-            <h2 class="serif text-3xl md:text-5xl font-black mb-8">第1期生、まもなく締め切り。</h2>
+            <!-- 修正点②: テキスト色を黒に設定 -->
+            <h2 class="serif text-3xl md:text-5xl font-black mb-8 text-black">第1期生、まもなく締め切り。</h2>
             <div class="bg-white/90 backdrop-blur max-w-2xl mx-auto p-8 rounded-lg shadow-2xl mb-10 border border-white/50">
-                <p class="font-bold text-lg mb-4">【モニター特別オファー】</p>
+                <p class="font-bold text-lg mb-4 text-black">【モニター特別オファー】</p>
                 <div class="flex justify-center items-baseline gap-4 mb-4">
-                    <span class="text-gray-500 line-through font-bold">入会金 ¥165,000</span>
+                    <span class="text-gray-600 line-through font-bold">入会金 ¥165,000</span>
                     <span class="text-5xl font-black text-red-600">➡ ¥0</span>
                 </div>
                 <p class="text-sm text-gray-800 font-medium">※「AI適性診断」に合格された<span class="text-red-600 font-bold text-lg mx-1">先着5名様</span>限定です。</p>
             </div>
             
-            <a href="#" class="inline-block bg-black text-[#C5A059] px-12 py-5 font-bold text-xl tracking-wider hover:bg-gray-900 transition shadow-[0_10px_30px_rgba(0,0,0,0.3)] rounded transform hover:-translate-y-1">
+            <!-- 修正点①: フッターのリンク -->
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSct_GBeqg5iuymcnFupX0nfZmFi0pqPpgJZDsfIhYup21nlmg/viewform" target="_blank" class="inline-block bg-black text-[#C5A059] px-12 py-5 font-bold text-xl tracking-wider hover:bg-gray-900 transition shadow-[0_10px_30px_rgba(0,0,0,0.3)] rounded transform hover:-translate-y-1">
                 無料体験・モニターに応募する
             </a>
-            <p class="mt-6 text-sm font-bold opacity-80">まずは親子で「AIの凄さ」を体感しに来てください。</p>
+            <!-- 修正点②: テキスト色を黒に設定 -->
+            <p class="mt-6 text-sm font-bold opacity-80 footer-cta-text text-black">まずは親子で「AIの凄さ」を体感しに来てください。</p>
         </div>
     </section>
 
