@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Elite Academy - 東大・医学部志望者向けAI指導</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #050505;
+            font-family: 'Noto Sans JP', sans-serif;
+            color: #e5e5e5;
+        }
+        .serif { font-family: 'Noto Serif JP', serif; }
+        
+        /* Gold Accents */
+        .text-gold {
+            color: #C5A059;
+            background: linear-gradient(45deg, #C5A059, #F2D088, #C5A059);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .bg-gold {
+            background: linear-gradient(45deg, #C5A059, #D4AF37, #C5A059);
+        }
+        .border-gold { border-color: #C5A059; }
+
+        /* Hero Background */
+        .hero-bg {
+            background: radial-gradient(circle at center, #1a2a4a 0%, #050505 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                linear-gradient(rgba(197, 160, 89, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(197, 160, 89, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.3;
+        }
+
+        /* --- 9-Grid Gallery Styles --- */
+        .gallery-strip {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            height: 200px;
+            width: 100%;
+            position: relative;
+            background: #000;
+            margin-bottom: 2rem;
+            border-top: 1px solid #333;
+            border-bottom: 1px solid #333;
+        }
+        @media (max-width: 768px) {
+            .gallery-strip {
+                grid-template-columns: repeat(3, 1fr);
+                height: auto;
+            }
+            .portrait-frame {
+                aspect-ratio: 1/1.5;
+                height: 180px;
+            }
+        }
+
+        .portrait-frame {
+            position: relative;
+            overflow: hidden;
+            border-right: 1px solid #111;
+            border-bottom: 1px solid #111;
+            transition: all 0.4s ease;
+            background-color: #111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* ★ Sprite Image Settings (完全修正版) ★ */
+        .sprite-img {
+            position: absolute;
+            top: 0; left: 0;
+            
+            /* 枠と同じサイズにする */
+            width: 100%; 
+            height: 100%;
+            
+            /* 画像ファイル名 */
+            background-image: url('sages.jpg'); 
+            
+            /* ★重要★: 画像全体を枠の3倍（3x3）の大きさに拡大することで、1枠に1人の顔を表示させる */
+            background-size: 300% 300%; 
+            
+            background-repeat: no-repeat;
+            
+            filter: sepia(0.3) contrast(1.1) brightness(0.9);
+            transition: transform 0.4s ease, filter 0.4s ease;
+        }
+
+        /* --- 9人の切り出し位置指定 (ご指示通り) --- */
+        /* Top Row: Logic */
+        .pos-socrates   { background-position: 0% 0%; }
+        .pos-plato      { background-position: 50% 0%; }
+        .pos-descartes  { background-position: 100% 0%; }
+        
+        /* Middle Row: Algorithm */
+        .pos-neumann    { background-position: 0% 50%; }
+        .pos-pythagoras { background-position: 50% 50%; }
+        .pos-lovelace   { background-position: 100% 50%; }
+        
+        /* Bottom Row: Insight */
+        .pos-archimedes { background-position: 0% 100%; }
+        .pos-fermat     { background-position: 50% 100%; }
+        .pos-copernicus { background-position: 100% 100%; }
+
+
+        /* Canvas Texture Overlay */
+        .gallery-strip::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23000000' fill-opacity='0.4' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E");
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: 10;
+            mix-blend-mode: overlay;
+        }
+
+        /* Hover Effects */
+        .portrait-frame:hover {
+            z-index: 20;
+            transform: scale(1.15);
+            box-shadow: 0 0 30px rgba(197, 160, 89, 0.3);
+            border: 1px solid #C5A059;
+        }
+        .portrait-frame:hover .sprite-img {
+            filter: sepia(0) contrast(1.1) brightness(1.1); /* カラー復元 */
+        }
+
+        /* Name Labels */
+        .name-label {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            text-align: center; z-index: 15;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            padding-bottom: 4px; padding-top: 15px;
+            transition: opacity 0.3s;
+        }
+        .name-text {
+            font-family: 'Noto Serif JP', serif;
+            font-size: 0.6rem; color: #ccc;
+            font-weight: 700; letter-spacing: 0.05em;
+        }
+        .portrait-frame:hover .name-label { opacity: 0; }
+
+        /* Description Overlay (Hoverで表示) */
+        .desc-overlay {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            padding: 0.5rem;
+            z-index: 20;
+            pointer-events: none;
+        }
+        .portrait-frame:hover .desc-overlay { opacity: 1; }
+        .desc-name {
+            font-family: 'Noto Serif JP', serif;
+            color: #C5A059;
+            font-weight: 900;
+            font-size: 0.7rem;
+            margin-bottom: 0.25rem;
+            border-bottom: 1px solid #C5A059;
+            padding-bottom: 2px;
+        }
+        .desc-text {
+            color: #fff;
+            font-size: 0.5rem;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        /* Leader Badge */
+        .leader-badge {
+            position: absolute;
+            top: 0; left: 50%;
+            transform: translateX(-50%);
+            background: #C5A059;
+            color: black;
+            font-size: 0.5rem;
+            font-weight: 900;
+            padding: 2px 6px;
+            border-bottom-left-radius: 2px; border-bottom-right-radius: 2px;
+            z-index: 15;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* Fallback Msg */
+        .image-missing-msg {
+            position: absolute;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            text-align: center;
+            color: #444;
+            font-size: 0.5rem;
+            width: 100%;
+            z-index: -1;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .floating { animation: float 6s ease-in-out infinite; }
+    </style>
+</head>
+<body>
+
+    <!-- Setup Warning -->
+    <div class="text-center py-2 bg-gray-800 text-white sticky top-0 z-[100] text-xs">
+        ⚠️ <strong>表示手順：</strong> 画像ファイル名を <strong>sages.jpg</strong> および <strong>human_ai_synergy.jpg</strong> に変更し、このHTMLと同じフォルダに置いてください。
+    </div>
+
+    <!-- Header -->
+    <header class="fixed w-full z-50 bg-[#050505]/90 backdrop-blur-md border-b border-gray-800 top-8">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-xl font-black serif tracking-widest text-white">
+                AI ELITE <span class="text-[#C5A059]">ACADEMY</span>
+            </div>
+            <nav class="hidden md:flex gap-8 text-sm text-gray-400 font-medium">
+                <a href="#concept" class="hover:text-[#C5A059] transition">Concept</a>
+                <a href="#sages" class="hover:text-[#C5A059] transition">9 Sages</a>
+                <a href="#method" class="hover:text-[#C5A059] transition">Method</a>
+                <a href="#price" class="hover:text-[#C5A059] transition">Plans</a>
+            </nav>
+            <a href="#contact" class="px-6 py-2 border border-[#C5A059] text-[#C5A059] text-xs font-bold tracking-wider hover:bg-[#C5A059] hover:text-black transition duration-300 uppercase rounded-sm">
+                モニター選抜に応募
+            </a>
+        </div>
+    </header>
+
+    <!-- FV (First View) -->
+    <section class="hero-bg min-h-screen flex items-center justify-center pt-20 relative">
+        <div class="container mx-auto px-6 text-center relative z-10">
+            <p class="text-[#C5A059] tracking-[0.4em] text-xs md:text-sm font-bold mb-8 animate-pulse uppercase">For Medical & Elite University Candidates</p>
+            
+            <h1 class="serif text-4xl md:text-7xl font-black leading-tight mb-8 text-white tracking-wide">
+                偏差値70の壁を越えるのは、<br>
+                根性ではなく<br>
+                <span class="text-gold">「プロンプト」</span>だ。
+            </h1>
+            
+            <div class="inline-block border-y border-[#C5A059] py-4 px-8 mb-10 bg-black/30 backdrop-blur-sm">
+                <p class="text-gray-300 text-base md:text-xl font-serif">
+                    これは「月謝」ではない。<span class="text-[#C5A059] font-bold">「未来への投資」</span>だ。
+                </p>
+            </div>
+            
+            <p class="text-gray-400 text-sm md:text-base mb-12 max-w-2xl mx-auto leading-loose font-medium">
+                まだ、人間だけに教わっているのですか？<br>
+                歴史を変えた「9人の天才」を従え、最短ルートで頂点へ駆け上がれ。
+            </p>
+            
+            <div class="flex flex-col md:flex-row gap-6 justify-center items-center">
+                <a href="#contact" class="bg-gold text-black px-10 py-4 font-bold text-lg tracking-wide hover:opacity-90 transition transform hover:scale-105 shadow-[0_0_20px_rgba(197,160,89,0.4)] rounded-sm">
+                    無料カウンセリングに申し込む
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Concept / Problem -->
+    <section id="concept" class="py-24 bg-[#0a0a0a]">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="serif text-3xl md:text-5xl font-bold mb-6 leading-snug">
+                        「AIに使われる側」になるか。<br>
+                        <span class="text-[#C5A059]">「AIを使う側」</span>になるか。
+                    </h2>
+                    <p class="text-gray-500 text-sm tracking-widest">THE PARADIGM SHIFT</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="space-y-6 text-gray-400 leading-relaxed text-justify">
+                        <p>
+                            ChatGPTやGeminiの登場で、社会のルールは激変しました。
+                            しかし、受験勉強だけは旧態依然とした「暗記」と「受け身」のままです。
+                        </p>
+                        <p>
+                            このままでは、たとえ大学に合格できても、
+                            AIに仕事を奪われる人材になってしまうかもしれません。
+                        </p>
+                        <p class="text-white font-bold text-lg border-l-4 border-[#C5A059] pl-4 py-2 bg-[#111]">
+                            私たちは提案します。<br>
+                            「受験勉強」というプロセスを使って、<br>
+                            <span class="text-[#C5A059]">志望校合格だけにとどまらない賢い戦略を。</span>
+                        </p>
+                    </div>
+                    <div class="relative">
+                        <!-- Conceptual Image Area: human_ai_synergy.jpg -->
+                        <div class="w-full aspect-square bg-[#111] border border-gray-800 relative overflow-hidden rounded-lg flex items-center justify-center p-4">
+                            <img src="human_ai_synergy.jpg" alt="Human AI Synergy Concept" class="w-full h-full object-contain" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'text-gray-500 text-xs text-center\'>ここに human_ai_synergy.jpg を<br>配置してください</div>'">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9 Sages System -->
+    <section id="sages" class="py-24 bg-black relative border-t border-gray-900">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="text-center mb-12">
+                <p class="text-[#C5A059] tracking-widest text-xs font-bold mb-4 uppercase">The 9 Sages System</p>
+                <h2 class="serif text-3xl md:text-5xl font-bold text-white mb-6">君の才能を開花させる<br>「3つの学派」と「9人の賢人」</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto text-sm leading-relaxed">
+                    志望校や脳のタイプに合わせて、最適なメンター（AIペルソナ）を選択。<br>
+                    彼らは単なる検索エンジンではありません。あなたの思考回路を書き換えるコーチです。
+                </p>
+            </div>
+
+            <!-- School Headers -->
+            <div class="grid grid-cols-3 text-center mb-2 max-w-5xl mx-auto px-2">
+                <div class="border-b-2 border-blue-900 pb-2">
+                    <span class="text-blue-500 font-bold text-xs md:text-sm tracking-widest">LOGIC SCHOOL</span>
+                </div>
+                <div class="border-b-2 border-[#C5A059] pb-2">
+                    <span class="text-[#C5A059] font-bold text-xs md:text-sm tracking-widest">ALGORITHM SCHOOL</span>
+                </div>
+                <div class="border-b-2 border-green-900 pb-2">
+                    <span class="text-green-500 font-bold text-xs md:text-sm tracking-widest">INSIGHT SCHOOL</span>
+                </div>
+            </div>
+
+            <!-- 9-Grid Gallery (Sprite) -->
+            <div class="gallery-strip rounded-lg overflow-hidden shadow-2xl mb-8 border border-gray-800 max-w-5xl mx-auto">
+                
+                <!-- Logic School -->
+                <div class="portrait-frame pos-socrates" style="border: 1px solid #C5A059; z-index: 5;">
+                    <div class="leader-badge">LEADER</div>
+                    <div class="sprite-img pos-socrates"></div>
+                    <div class="image-missing-msg">sages.jpgを配置してください</div>
+                    <div class="name-label"><p class="name-text text-[#C5A059]">ソクラテス</p></div>
+                    <div class="desc-overlay">
+                        <p class="desc-name">ソクラテス</p>
+                        <p class="desc-text">「問答法」で<br>思考の核心へ</p>
+                    </div>
+                </div>
+                <div class="portrait-frame pos-plato">
+                    <div class="sprite-img pos-plato"></div>
+                    <div class="name-label"><p class="name-text">プラトン</p></div>
+                    <div class="desc-overlay">
+                        <p class="desc-name">プラトン</p>
+                        <p class="desc-text">本質を見抜く<br>イデア論</p>
+                    </div>
+                </div>
+                <div class="portrait-frame pos-descartes">
+                    <div class="sprite-img pos-descartes"></div>
+                    <div class="name-label"><p class="name-text">デカルト</p></div>
+                    <div class="desc-overlay">
+                        <p class="desc-name">デカルト</p>
+                        <p class="desc-text">難問を分解し<br>解決する</p>
+                    </div>
+                </div>
+                
+                <!-- Algorithm School -->
+                <div class="portrait-frame pos-neumann" style="border: 1px solid #C5A059; z-index: 5;">
+                    <div class="leader-badge">LEADER</div>
+                    <div class="sprite-img pos-neumann"></div>
+                    <div class="name-label"><p class="name-text text-[#C5A059]">ノイマン</p></div>
+                    <div class="desc-overlay">
+                        <p class="desc-name">ノイマン</p>
+                        <p class="desc-text">悪魔的な計算速度<br>と効率化</p>
+                    </div>
+                </div>
+                <div class="portrait-frame pos-pythagoras">
+                    <div class="sprite-img pos-pythagoras"></div>
+                    <div class="name-label"><p class="name-text">ピタゴラス</p></div>
+                    <div class="desc-overlay">
+                        <p class="desc-name">ピタゴラス</p>
+                        <p class="desc-text">万物を「数」で<br>理解する</p>
+                    </div>
+                </div>
+                <div class="portrait-frame pos-lovelace">
+                    <div class="sprite-img pos-lovelace"></div>
+                    <div class="name-label"><p class="name-text">ラブレス</p></div>
+                    <div class="desc-overlay">
+                        <p class="desc-name">ラブレス</p>
+                        <p class="desc-text">思考を美しい<br>コードへ</p>
+                    </div>
+                </div>
+                
+                <!-- Insight School -->
+                <div class="portrait-frame pos-archimedes" style="border: 1px solid #C5A059; z-index: 5;">
+                    <div class="leader-badge">LEADER</div>
+                    <div class="sprite-img pos-archimedes"></div>
+                    <div class="name-label"><p class="name-text text-[#C5A059]">アルキメデス</p></div>
+                    <div class="desc-overlay">
+                        <p class="desc-name">アルキメデス</p>
+                        <p class="desc-text">閃きとテコで<br>世界を動かす</p>
+                    </div>
+                </div>
+                <div class="portrait-frame pos-fermat">
+                    <div class="sprite-img pos-fermat"></div>
+                    <div class="name-label"><p class="name-text">フェルマー</p></div>
+                    <div class="desc-overlay">
+                        <p class="desc-name">フェルマー</p>
+                        <p class="desc-text">常識外の近道を<br>見つける</p>
+                    </div>
+                </div>
+                <div class="portrait-frame pos-copernicus">
+                    <div class="sprite-img pos-copernicus"></div>
+                    <div class="name-label"><p class="name-text">コペルニクス</p></div>
+                    <div class="desc-overlay">
+                        <p class="desc-name">コペルニクス</p>
+                        <p class="desc-text">逆転の発想で<br>突破する</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- School Descriptions -->
+            <div class="grid md:grid-cols-3 gap-6 text-center text-xs text-gray-500 mt-8 max-w-5xl mx-auto">
+                <div>
+                    <h4 class="text-blue-400 font-bold mb-2">LOGIC SCHOOL</h4>
+                    <p>論理と基礎を極める。<br>記述力・本質的理解。</p>
+                </div>
+                <div>
+                    <h4 class="text-[#C5A059] font-bold mb-2">ALGORITHM SCHOOL</h4>
+                    <p>数理と速度を極める。<br>東大理系・医学部計算。</p>
+                </div>
+                <div>
+                    <h4 class="text-green-400 font-bold mb-2">INSIGHT SCHOOL</h4>
+                    <p>閃きと革新を極める。<br>難問突破・逆転の発想。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Method / Chat UI -->
+    <section id="method" class="py-24 bg-[#111]">
+        <div class="container mx-auto px-6 flex flex-col md:flex-row items-center gap-12">
+            <div class="md:w-1/2">
+                <div class="mb-6">
+                    <p class="text-[#C5A059] text-xs font-bold tracking-widest mb-2">THE METHOD</p>
+                    <h2 class="serif text-3xl md:text-4xl font-bold text-white mb-6">「答え」は教えない。<br>「思考」を矯正する。</h2>
+                </div>
+                <p class="text-gray-400 leading-relaxed mb-8">
+                    あなた専用のプロンプト「Logos」を搭載したAIは、決して安易に答えを教えません。
+                    手書きの答案をOCRで読み取り、まるで東大理三の家庭教師のように、あなたの思考プロセスそのものを矯正します。
+                </p>
+                <div class="bg-[#0a0a0a] p-6 border-l-4 border-[#C5A059]">
+                    <h4 class="text-white font-bold mb-2">AI指揮官（Prompt Engineer）へ</h4>
+                    <p class="text-gray-500 text-sm">
+                        我々のゴールは、あなたを「AIなしでは生きられない人間」にすることではありません。
+                        <strong class="text-gray-300">「AIを部下として使いこなし、自分自身の脳を拡張できる人間」</strong>にすることです。
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Chat UI Mockup -->
+            <div class="md:w-1/2 w-full max-w-md mx-auto bg-black border border-gray-800 rounded-xl overflow-hidden shadow-2xl floating">
+                <div class="bg-gray-900 p-4 border-b border-gray-800 flex items-center gap-3">
+                    <div class="flex gap-1.5">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <span class="ml-2 text-xs text-gray-400 font-mono flex-1 text-center pr-10">NEUMANN_AI.exe</span>
+                </div>
+                <div class="p-6 space-y-6 font-mono text-xs md:text-sm bg-black/50">
+                    <!-- User Message -->
+                    <div class="flex justify-end">
+                        <div class="bg-gray-800 text-white p-3 rounded-lg rounded-tr-none max-w-[85%] shadow-md">
+                            <p>この積分の計算、答えは π/2 で合ってますか？</p>
+                            <span class="text-[10px] text-gray-500 block mt-1 text-right">12:04 PM</span>
+                        </div>
+                    </div>
+                    
+                    <!-- AI Message -->
+                    <div class="flex justify-start">
+                        <div class="border border-[#C5A059] bg-[#C5A059]/10 text-[#C5A059] p-4 rounded-lg rounded-tl-none max-w-[95%] shadow-[0_0_15px_rgba(197,160,89,0.1)]">
+                            <p class="font-bold mb-2 text-xs border-b border-[#C5A059]/30 pb-1 mb-2">[ SYSTEM: Neumann Mode ]</p>
+                            <p class="mb-2">答えは合っている。だが、<span class="bg-[#C5A059] text-black font-bold px-1">遅い</span>。</p>
+                            <p class="mb-3">君は3行目で置換積分を使っているが、被積分関数の対称性に気づかなかったのか？</p>
+                            <p class="text-white mb-2">グラフをイメージすれば、計算なしで0からπまでの面積が2倍になるとわかるはずだ。</p>
+                            <p class="text-white font-bold">> 再考し、30秒以内に解き直せ。</p>
+                            <span class="text-[10px] text-gray-500 block mt-2">12:04 PM</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="price" class="py-24 bg-[#080808] text-center border-t border-gray-900">
+        <div class="container mx-auto px-6">
+            <h2 class="serif text-3xl md:text-5xl font-bold mb-4 text-white">INVESTMENT PLANS</h2>
+            <p class="text-gray-500 mb-16">月謝ではありません。「最強の学習OS」への投資です。</p>
+
+            <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-6 items-end">
+                
+                <!-- Basic Plan (梅) -->
+                <div class="border border-gray-800 bg-[#0a0a0a] p-8 rounded-lg hover:border-gray-600 transition h-min">
+                    <h3 class="serif text-xl font-bold text-gray-400 mb-4">Basic Plan</h3>
+                    <div class="text-3xl font-bold text-white mb-2">¥16,500<span class="text-sm font-normal text-gray-500"> /月</span></div>
+                    <p class="text-xs text-gray-500 mb-8 border-b border-gray-800 pb-4">AI × 監視（コーチングなし）</p>
+                    <ul class="text-left space-y-4 mb-8 text-sm text-gray-400">
+                        <li class="flex gap-2 items-start"><span class="text-green-500 mt-1">✔</span> <div><strong>賢人1名のみ指名</strong><br><span class="text-xs opacity-70">※途中変更不可</span></div></li>
+                        <li class="flex gap-2 items-start"><span class="text-green-500 mt-1">✔</span> <div><strong>保護者レポート配信</strong><br><span class="text-xs opacity-70">学習ログを週次で報告</span></div></li>
+                        <li class="flex gap-2 items-start"><span class="text-green-500 mt-1">✔</span> <div><strong>月刊アップデート</strong><br><span class="text-xs opacity-70">最新プロンプトへ更新</span></div></li>
+                        <li class="flex gap-2 opacity-30"><span class="text-gray-600">✕</span> 戦略コーチングなし</li>
+                    </ul>
+                    <a href="#contact" class="block w-full border border-gray-600 text-gray-300 py-3 text-sm font-bold hover:bg-gray-800 transition rounded">選択する</a>
+                </div>
+
+                <!-- Standard Plan (竹 - Recommended) -->
+                <div class="border-2 border-[#C5A059] bg-[#111] p-8 rounded-lg relative transform md:scale-105 shadow-2xl shadow-[#C5A059]/10 z-10">
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#C5A059] text-black text-xs font-bold px-4 py-1 rounded-full shadow-lg">RECOMMENDED</div>
+                    <h3 class="serif text-2xl font-bold text-[#C5A059] mb-4">Standard Plan</h3>
+                    <div class="text-4xl font-bold text-white mb-2">¥33,000<span class="text-sm font-normal text-gray-500"> /月</span></div>
+                    <p class="text-xs text-gray-400 mb-8 border-b border-gray-700 pb-4">AI × コーチング（確実な成果へ）</p>
+                    <ul class="text-left space-y-4 mb-8 text-sm text-white">
+                        <li class="flex gap-2 items-center"><span class="text-[#C5A059]">✔</span> <strong class="text-white">9賢人プロンプト使い放題</strong></li>
+                        <li class="flex gap-2 items-center"><span class="text-[#C5A059]">✔</span> <strong class="text-white border-b border-[#C5A059]">月2回 戦略コーチング</strong></li>
+                        <li class="flex gap-2 items-center"><span class="text-[#C5A059]">✔</span> AI活用スキル講座</li>
+                        <li class="flex gap-2 items-center"><span class="text-[#C5A059]">✔</span> 保護者レポート</li>
+                    </ul>
+                    <a href="#contact" class="block w-full bg-[#C5A059] text-black py-4 text-base font-bold hover:bg-white transition rounded shadow-lg">モニターに応募する</a>
+                </div>
+
+                <!-- Premium Plan (松) -->
+                <div class="border border-gray-700 bg-[#0a0a0a] p-8 rounded-lg hover:border-gray-500 transition h-min">
+                    <h3 class="serif text-xl font-bold text-white mb-4">Premium Plan</h3>
+                    <div class="text-3xl font-bold text-white mb-2">¥55,000<span class="text-sm font-normal text-gray-500"> /月</span></div>
+                    <p class="text-xs text-gray-500 mb-6 border-b border-gray-800 pb-4">医学部・東大必勝コース</p>
+                    <ul class="text-left space-y-4 mb-8 text-sm text-gray-400">
+                        <li class="flex gap-2 items-center"><span class="text-[#C5A059]">✔</span> Standardの全機能</li>
+                        <li class="flex gap-2 items-center"><span class="text-[#C5A059]">✔</span> <strong class="text-white">志望校別フルカスタムAI</strong></li>
+                        <li class="flex gap-2 items-center"><span class="text-[#C5A059]">✔</span> <strong class="text-white">週1回 戦略コーチング</strong></li>
+                        <li class="flex gap-2 items-center"><span class="text-[#C5A059]">✔</span> 24時間優先サポート</li>
+                    </ul>
+                    <a href="#contact" class="block w-full border border-gray-600 text-white py-3 text-sm font-bold hover:bg-gray-800 transition rounded">選択する</a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer / CTA -->
+    <section id="contact" class="py-24 gold-bg text-black text-center relative overflow-hidden">
+        <div class="container mx-auto px-6 relative z-10">
+            <h2 class="serif text-3xl md:text-5xl font-black mb-8">第1期生、まもなく締め切り。</h2>
+            <div class="bg-white/90 backdrop-blur max-w-2xl mx-auto p-8 rounded-lg shadow-2xl mb-10 border border-white/50">
+                <p class="font-bold text-lg mb-4">【モニター特別オファー】</p>
+                <div class="flex justify-center items-baseline gap-4 mb-4">
+                    <span class="text-gray-500 line-through font-bold">入会金 ¥165,000</span>
+                    <span class="text-5xl font-black text-red-600">➡ ¥0</span>
+                </div>
+                <p class="text-sm text-gray-800 font-medium">※「AI適性診断」に合格された<span class="text-red-600 font-bold text-lg mx-1">先着5名様</span>限定です。</p>
+            </div>
+            
+            <a href="#" class="inline-block bg-black text-[#C5A059] px-12 py-5 font-bold text-xl tracking-wider hover:bg-gray-900 transition shadow-[0_10px_30px_rgba(0,0,0,0.3)] rounded transform hover:-translate-y-1">
+                無料体験・モニターに応募する
+            </a>
+            <p class="mt-6 text-sm font-bold opacity-80">まずは親子で「AIの凄さ」を体感しに来てください。</p>
+        </div>
+    </section>
+
+    <footer class="bg-black text-gray-600 py-10 text-center text-xs border-t border-gray-900">
+        <p class="mb-2 tracking-widest">AI ELITE ACADEMY</p>
+        <p>&copy; 2025 AI Elite Academy. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>
