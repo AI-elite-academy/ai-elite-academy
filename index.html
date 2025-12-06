@@ -95,11 +95,7 @@
             transition: transform 0.4s ease, filter 0.4s ease;
         }
 
-        /* --- 切り出し位置 (3x3 Grid - FINAL CORRECT CALCULATION) --- */
-        /* 計算: background-position: X% Y%;
-           X軸は0%, 50%, 100% / Y軸は0%, 50%, 100% 
-           このロジックは画像が3x3にきれいに分割されている前提で正しく機能します。
-        */
+        /* --- 切り出し位置 (3x3 Grid) --- */
         .pos-socrates   { background-position: 0% 0%; }
         .pos-plato      { background-position: 50% 0%; }
         .pos-descartes  { background-position: 100% 0%; }
@@ -206,26 +202,24 @@
             50% { transform: translateY(-10px); }
         }
         .floating { animation: float 6s ease-in-out infinite; }
-
+        
         /* CTA Footer Styling */
-        .gold-bg {
-            background: linear-gradient(135deg, #C5A059, #F2D088); /* ゴールドのグラデーション */
+        /* ★ 修正点②の背景色を黒に指定し直す ★ */
+        .cta-footer-bg {
+            background-color: #000;
         }
+        /* 修正点②: CTAフッターのテキスト色を、指定の#C5A059に変更 */
         .footer-cta-text {
-            /* 背景が明るいゴールドなので、テキストは黒系に設定 */
-            color: #333; 
+            color: #C5A059; 
+            font-weight: 900;
         }
     </style>
 </head>
 <body>
 
-    <!-- Setup Warning -->
-    <div class="text-center py-2 bg-gray-800 text-white sticky top-0 z-[100] text-xs">
-        ⚠️ <strong>表示手順：</strong> お手持ちの画像を <strong>sages.jpg</strong> および <strong>human_ai_synergy.jpg</strong> にリネームし、このHTMLと同じフォルダに置いてください。
-    </div>
+    <!-- 削除点③: Setup Warningを削除 -->
 
-    <!-- Header -->
-    <header class="fixed w-full z-50 bg-[#050505]/90 backdrop-blur-md border-b border-gray-800 top-8">
+    <!-- Header --><header class="fixed w-full z-50 bg-[#050505]/90 backdrop-blur-md border-b border-gray-800 top-8">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
             <div class="text-xl font-black serif tracking-widest text-white">
                 AI ELITE <span class="text-[#C5A059]">ACADEMY</span>
@@ -243,8 +237,7 @@
         </div>
     </header>
 
-    <!-- FV (First View) -->
-    <section class="hero-bg min-h-screen flex items-center justify-center pt-20 relative">
+    <!-- FV (First View) --><section class="hero-bg min-h-screen flex items-center justify-center pt-20 relative">
         <div class="container mx-auto px-6 text-center relative z-10">
             <p class="text-[#C5A059] tracking-[0.4em] text-xs md:text-sm font-bold mb-8 animate-pulse uppercase">For Medical & Elite University Candidates</p>
             
@@ -490,7 +483,7 @@
 
     <!-- Pricing Section --><section id="price" class="py-24 bg-[#080808] text-center border-t border-gray-900">
         <div class="container mx-auto px-6">
-            <h2 class="serif text-3xl md:text-5xl font-bold mb-4 text-white">INVESTMENT PLANS</h2>
+            <h2 class="serif text-3xl md:text-5xl font-bold mb-4 white">INVESTMENT PLANS</h2>
             <p class="text-gray-500 mb-16">月謝ではありません。「最強の学習OS」への投資です。</p>
 
             <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-6 items-end">
@@ -541,8 +534,8 @@
 
     <!-- Footer / CTA --><section id="contact" class="py-24 gold-bg text-black text-center relative overflow-hidden">
         <div class="container mx-auto px-6 relative z-10">
-            <!-- 修正点②: テキスト色を黒に設定 -->
-            <h2 class="serif text-3xl md:text-5xl font-black mb-8 text-black">第1期生、まもなく締め切り。</h2>
+            <!-- 修正点②: テキスト色を #C5A059 に設定 -->
+            <h2 class="serif text-3xl md:text-5xl font-black mb-8 text-[#C5A059]">第1期生、まもなく締め切り。</h2>
             <div class="bg-white/90 backdrop-blur max-w-2xl mx-auto p-8 rounded-lg shadow-2xl mb-10 border border-white/50">
                 <p class="font-bold text-lg mb-4 text-black">【モニター特別オファー】</p>
                 <div class="flex justify-center items-baseline gap-4 mb-4">
@@ -556,8 +549,8 @@
             <a href="https://docs.google.com/forms/d/e/1FAIpQLSct_GBeqg5iuymcnFupX0nfZmFi0pqPpgJZDsfIhYup21nlmg/viewform" target="_blank" class="inline-block bg-black text-[#C5A059] px-12 py-5 font-bold text-xl tracking-wider hover:bg-gray-900 transition shadow-[0_10px_30px_rgba(0,0,0,0.3)] rounded transform hover:-translate-y-1">
                 無料体験・モニターに応募する
             </a>
-            <!-- 修正点②: テキスト色を黒に設定 -->
-            <p class="mt-6 text-sm font-bold opacity-80 footer-cta-text text-black">まずは親子で「AIの凄さ」を体感しに来てください。</p>
+            <!-- 修正点②: テキスト色を #C5A059 に設定 -->
+            <p class="mt-6 text-sm font-bold opacity-80 footer-cta-text text-[#C5A059]">まずは親子で「AIの凄さ」を体感しに来てください。</p>
         </div>
     </section>
 
